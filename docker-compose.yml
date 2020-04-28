@@ -1,0 +1,47 @@
+version: "3.7"
+services: 
+    nginx:
+        build: ./nginx
+        container_name: ng01
+        ports: 
+            - "80:80"
+        volumes: 
+            - ./static:/src/backend/staticfiles
+            - ./media:/src/backend/mediafiles
+        depends_on: 
+            - web
+        restart: on-failure
+    
+    web:
+        build: ./src/backend
+        command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+        container_name: dg01
+        volumes: 
+            - ./static:/src/backend/staticfiles
+            - ./media:/src/backend/mediafiles
+        depends_on: 
+            - postgres
+        env_file: 
+            - ./.env.prod
+        expose: 
+            - "8000"
+        restart: on-failure
+    
+    
+    postgres:
+        image: postgres:latest
+        volumes:
+            - type : volume
+              source : ./postgres_data
+              target : /var/lib/postgresql/data
+        container_name: ps01
+        env_file: 
+            - ./.env.prod
+        ports:
+            - "5432:5432"
+        restart: on-failure
+
+volumes:
+    postgres_data:
+    static:
+    media: 

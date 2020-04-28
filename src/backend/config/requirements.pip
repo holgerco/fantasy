@@ -1,0 +1,9 @@
+Django
+gunicorn
+django-polymorphic==2.1.2
+psycopg2
+pytz
+django-custom-user-models
+Pillow
+jdatetime
+django_jalali
